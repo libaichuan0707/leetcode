@@ -1,0 +1,66 @@
+给定字符串，求最长不重复字符个数
+
+begin和end,分别代表移动的位置，当遇到不重复字符的时候，end++，存当前这个字符到已经使用的数组，计算max.当遇到重复的时候删除begin位置的已经使用字符，begin++.
+
+这里我最开始用一个map存的那些已经出现的字符,如下
+
+func lengthOfLongestSubstring(s string) int {
+    strLen := len(s)
+	strMap := make(map[byte]int)
+	begin := 0
+	end := 0
+	max := 0
+
+	for ;end < strLen; {
+		tempChar := s[end]
+		if _, ok := strMap[tempChar]; !ok {
+			strMap[tempChar] = end
+
+			curLen := end - begin + 1
+			if curLen > max {
+				max = curLen
+			}
+
+			end++
+		}else{
+			delete(strMap, s[begin])
+			begin++
+		}
+	}
+
+	return max
+}
+
+//后面看时间还是比较耗时，选择了用下面这种，但是这种必须保证字符集编码在范围在0-255之间的字符
+func lengthOfLongestSubstring(s string) int {
+	strLen := len(s)
+	if strLen == 0 {
+		return 0
+	}
+
+	strUsed := make([]bool, 256, 256)
+	begin := 0
+	end := 0
+	max := 0
+
+	//pwwkew
+	for ;end < strLen && begin < strLen; {
+		tempChar := s[end]
+		isUsed := strUsed[tempChar]
+		if !isUsed {
+			strUsed[tempChar ] = true
+
+			curLen := end - begin + 1
+			if curLen > max {
+				max = curLen
+			}
+
+			end++
+		}else{
+			strUsed[s[begin]] = false
+			begin++
+		}
+	}
+
+	return max
+}

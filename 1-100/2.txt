@@ -1,0 +1,64 @@
+两个单链表求加和
+
+会写单链表应该都没啥问题
+/**
+ * Definition for singly-linked list.
+ * type ListNode struct {
+ *     Val int
+ *     Next *ListNode
+ * }
+ */
+func AddNum(l1 *ListNode, addNum int) int {
+	tempNum := 0
+	l1.Val += addNum
+
+	if l1.Val >= 10 {
+		l1.Val -= 10
+		tempNum = 1
+	}
+
+	return tempNum
+}
+
+func addTwoNumbers(l1 *ListNode, l2 *ListNode) *ListNode {
+	tempNum := 0
+	headNode := &ListNode{0, nil}
+	curNode := headNode
+
+	n1 := l1
+	n2 := l2
+
+	for ;n1 != nil || n2 != nil; {
+		num1 := 0
+		num2 := 0
+
+		node := &ListNode{0, nil}
+
+		if n1 != nil {
+			num1 = n1.Val
+		}
+
+		if n2 != nil {
+			num2 = n2.Val
+		}
+
+		tempNum = AddNum(node, num1 + num2 + tempNum)
+		curNode.Next = node
+        curNode = node
+        
+        if n1 != nil {
+            n1 =  n1.Next
+        }
+        
+         if n2 != nil {
+            n2 =  n2.Next
+        }
+	}
+
+	if tempNum > 0 {
+		node := &ListNode{1, nil}
+		curNode.Next = node
+	}
+
+	return headNode.Next
+}
