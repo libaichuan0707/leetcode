@@ -1,0 +1,43 @@
+求两个顺序数组的中位数
+
+最直观的思路，用一个数组把他们合并，然后求中间的数，如下
+func findMedianSortedArrays(nums1 []int, nums2 []int) float64 {
+	l1 := 0
+	l2 := 0
+	totalLen := len(nums1) + len(nums2)
+	if totalLen == 0 {
+		return 0
+	}
+
+	arr := make([]int, 0, totalLen)
+
+	for ;l1 < len(nums1) || l2 < len(nums2); {
+		if l1 < len(nums1) && l2 < len(nums2) {
+			if nums1[l1] > nums2[l2] {
+				arr = append(arr, nums2[l2])
+				l2 ++
+			}else{
+				arr = append(arr, nums1[l1])
+				l1++
+			}
+		}else if l1 >= len(nums1) && l2 < len(nums2) {
+			arr = append(arr, nums2[l2])
+			l2 ++
+		}else if l1 < len(nums1) && l2 >= len(nums2) {
+			arr = append(arr, nums1[l1])
+			l1 ++
+		}
+	}
+
+	if totalLen % 2 == 0 {
+		return float64(arr[totalLen / 2] + arr[totalLen / 2 - 1]) / 2.0
+	}else{
+		return float64(arr[totalLen / 2])
+	}
+}
+
+但是上面的解法这样有问题
+1.开辟了多余的空间
+2.时间是o(m+n)
+
+后面做了改进成，其实只需要遍历到(m+n)/2 ，然后记录用end和preend去处理
